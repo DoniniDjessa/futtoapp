@@ -427,3 +427,18 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# Expo / FUTTO
+.env
+.env.local
+.env*.local
+.expo/
+.tamagui/
+dist/
+web-build/
+node_modules/
+expo-env.d.ts
+
+# Firebase / Google secrets (garder google-services.json client ; jamais l’admin SDK)
+*-firebase-adminsdk-*.json
+service-account*.json

@@ -1,0 +1,131 @@
+{
+  "expo": {
+    "name": "FUTTO",
+    "slug": "futto",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "futto",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.rixxelstudio.futto",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "FUTTO utilise ta position pour trouver terrains et joueurs près de toi.",
+        "NSCameraUsageDescription": "FUTTO utilise la caméra pour photos de profil, terrains et affiches.",
+        "NSMicrophoneUsageDescription": "FUTTO utilise le micro pour messages vocaux et contenus.",
+        "NSContactsUsageDescription": "FUTTO accède à tes contacts pour inviter des joueurs sans forcer l’install.",
+        "LSApplicationQueriesSchemes": [
+          "whatsapp",
+          "tel"
+        ]
+      }
+    },
+    "android": {
+      "package": "com.rixxelstudio.futto",
+      "versionCode": 1,
+      "googleServicesFile": "./google-services.json",
+      "softwareKeyboardLayoutMode": "pan",
+      "adaptiveIcon": {
+        "backgroundColor": "#0d0d0d",
+        "foregroundImage": "./assets/images/android-icon-foreground.png",
+        "backgroundImage": "./assets/images/android-icon-background.png",
+        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+      },
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.INTERNET",
+        "android.permission.VIBRATE",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#0d0d0d",
+          "imageWidth": 220
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "FUTTO utilise ta position pour trouver terrains et joueurs près de toi."
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "FUTTO utilise la caméra pour photos de profil, terrains et affiches.",
+          "microphonePermission": "FUTTO utilise le micro pour messages vocaux et contenus.",
+          "recordAudioAndroid": true
+        }
+      ],
+      [
+        "expo-av",
+        {
+          "microphonePermission": "FUTTO utilise le micro pour messages vocaux et contenus."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "FUTTO accède à tes photos pour avatars, terrains et affiches."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/icon.png",
+          "color": "#00b14f",
+          "defaultChannel": "futto",
+          "googleServicesFile": "./google-services.json"
+        }
+      ],
+      "expo-secure-store",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./node_modules/@expo-google-fonts/plus-jakarta-sans/400Regular/PlusJakartaSans_400Regular.ttf",
+            "./node_modules/@expo-google-fonts/plus-jakarta-sans/500Medium/PlusJakartaSans_500Medium.ttf",
+            "./node_modules/@expo-google-fonts/plus-jakarta-sans/600SemiBold/PlusJakartaSans_600SemiBold.ttf",
+            "./node_modules/@expo-google-fonts/plus-jakarta-sans/700Bold/PlusJakartaSans_700Bold.ttf",
+            "./node_modules/@expo-google-fonts/oswald/400Regular/Oswald_400Regular.ttf",
+            "./node_modules/@expo-google-fonts/oswald/500Medium/Oswald_500Medium.ttf",
+            "./node_modules/@expo-google-fonts/oswald/600SemiBold/Oswald_600SemiBold.ttf",
+            "./node_modules/@expo-google-fonts/oswald/700Bold/Oswald_700Bold.ttf"
+          ]
+        }
+      ],
+      "expo-image",
+      "expo-web-browser"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3fc46800-f3b2-4053-a504-3a218374b5d7"
+      },
+      "supabaseUrl": "https://tfcnforazrpfnrwtlisc.supabase.co",
+      "supabaseAnonKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRmY25mb3JhenJwZm5yd3RsaXNjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg0OTA3ODIsImV4cCI6MjEwNDA2Njc4Mn0.lXYnK0fkrKdnAN8Ugvf4pY9X5rUH0FDClehm33o8tHk",
+      "router": {}
+    },
+    "owner": "rixxel-studio"
+  }
+}

@@ -64,6 +64,7 @@ module.exports = ({ config }) => ({
     supabaseAnonKey: supabaseAnonKey || config.extra?.supabaseAnonKey || DEFAULT_SUPABASE_ANON_KEY,
   },
   plugins: [
+    "expo-router",
     "@react-native-community/datetimepicker"
   ],
 })

@@ -24,18 +24,18 @@
     "@supabase/supabase-js": "^2.112.4",
     "@tamagui/config": "^2.7.7",
     "babel-preset-expo": "~57.0.0",
-    "expo": "~57.0.23",
+    "expo": "~57.0.24",
     "expo-av": "^16.0.8",
     "expo-camera": "~57.0.5",
     "expo-constants": "~57.0.17",
     "expo-font": "~57.0.3",
     "expo-image": "~57.0.5",
-    "expo-image-manipulator": "~57.0.18",
-    "expo-image-picker": "~57.0.18",
+    "expo-image-manipulator": "~57.0.19",
+    "expo-image-picker": "~57.0.19",
     "expo-linking": "~57.0.10",
-    "expo-location": "~57.0.18",
-    "expo-notifications": "~57.0.19",
-    "expo-router": "~57.0.21",
+    "expo-location": "~57.0.19",
+    "expo-notifications": "~57.0.20",
+    "expo-router": "~57.0.22",
     "expo-secure-store": "~57.0.4",
     "expo-splash-screen": "~57.0.9",
     "expo-status-bar": "~57.0.1",
@@ -61,5 +61,14 @@
     "@tamagui/metro-plugin": "^2.7.7",
     "@types/react": "~19.2.4",
     "typescript": "~6.0.3"
+  },
+  "expo": {
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "exclude": [
+          "expo-av"
+        ]
+      }
+    }
   }
 }

@@ -63,4 +63,7 @@ module.exports = ({ config }) => ({
     supabaseUrl: supabaseUrl || config.extra?.supabaseUrl || DEFAULT_SUPABASE_URL,
     supabaseAnonKey: supabaseAnonKey || config.extra?.supabaseAnonKey || DEFAULT_SUPABASE_ANON_KEY,
   },
+  plugins: [
+    "@react-native-community/datetimepicker"
+  ],
 })

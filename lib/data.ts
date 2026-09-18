@@ -143,50 +143,6 @@ export function useTournaments() {
         .select('*')
         .order('created_at', { ascending: false })
 
-      if (!data || data.length === 0) {
-        // Amorcer les tournois officiels FUTTO réels en base
-        const initial = [
-          {
-            name: 'FUTTO CUP 2026',
-            date_label: '15 Octobre 2026',
-            location: 'Abidjan · Cocody',
-            teams: 4,
-            teams_max: 16,
-            fee_fcfa: 50000,
-            prize: '1 000 000 FCFA',
-            status: 'open',
-            commission_paid: true,
-          },
-          {
-            name: 'Maracana Champions League',
-            date_label: '28 Octobre 2026',
-            location: 'Abidjan · Yopougon',
-            teams: 8,
-            teams_max: 8,
-            fee_fcfa: 35000,
-            prize: '500 000 FCFA',
-            status: 'full',
-            commission_paid: true,
-          },
-          {
-            name: 'Five Elite Plateau',
-            date_label: '5 Novembre 2026',
-            location: 'Abidjan · Plateau',
-            teams: 2,
-            teams_max: 10,
-            fee_fcfa: 40000,
-            prize: '600 000 FCFA',
-            status: 'open',
-            commission_paid: true,
-          },
-        ]
-        await supabase.from(T.tournaments).insert(initial)
-        const reselect = await supabase
-          .from(T.tournaments)
-          .select('*')
-          .order('created_at', { ascending: false })
-        data = reselect.data
-      }
 
       setTournaments((data as TournamentRow[]) ?? [])
     } catch (e) {

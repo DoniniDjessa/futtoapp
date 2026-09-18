@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Alert, ScrollView } from 'react-native'
+import { Alert, ScrollView, Platform, TouchableOpacity } from 'react-native'
 import { Stack, useRouter } from 'expo-router'
 import * as ImagePicker from 'expo-image-picker'
-import { Text, YStack, Input, Button } from 'tamagui'
+import DateTimePicker from '@react-native-community/datetimepicker'
+import { Text, YStack, Input, Button, XStack } from 'tamagui'
 import { Image } from 'expo-image'
 import { BackHeader } from '@/components/BackHeader'
 import { useAuth } from '@/lib/auth'
@@ -22,7 +23,11 @@ export default function CreerTournoiScreen() {
   const palette = mode === 'dark' ? colors : lightColors
 
   const [name, setName] = useState('')
-  const [dateLabel, setDateLabel] = useState('')
+  const [startDate, setStartDate] = useState(new Date())
+  const [endDate, setEndDate] = useState(new Date())
+  const [showStartPicker, setShowStartPicker] = useState(false)
+  const [showEndPicker, setShowEndPicker] = useState(false)
+  
   const [location, setLocation] = useState('Abidjan')
   const [commissionRate, setCommissionRate] = useState<number>(10)
   const [fee, setFee] = useState('50000')
@@ -66,6 +71,11 @@ export default function CreerTournoiScreen() {
       Alert.alert('Tournoi', 'Nom requis.')
       return
     }
+    
+    // Generate date_label from real dates
+    const formatOpts: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short' }
+    const dateLabel = `${startDate.toLocaleDateString('fr-FR', formatOpts)} - ${endDate.toLocaleDateString('fr-FR', formatOpts)}`
+
     setBusy(true)
     try {
       let poster_url: string | null = null
@@ -92,7 +102,7 @@ export default function CreerTournoiScreen() {
         .from(T.tournaments)
         .insert({
           name: name.trim(),
-          date_label: dateLabel.trim() || null,
+          date_label: dateLabel,
           location: location.trim() || null,
           teams: 0,
           teams_max: Number(teamsMax) || 8,
@@ -126,6 +136,10 @@ export default function CreerTournoiScreen() {
     }
   }
 
+  const formatDateStr = (date: Date) => {
+    return date.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })
+  }
+
   return (
     <YStack flex={1} backgroundColor={palette.bg}>
       <Stack.Screen options={{ headerShown: false }} />
@@ -145,17 +159,67 @@ export default function CreerTournoiScreen() {
           borderRadius={14}
           height={52}
         />
-        <Input
-          value={dateLabel}
-          onChangeText={setDateLabel}
-          placeholder="Dates (ex. 12–14 avril)"
-          backgroundColor={palette.card}
-          borderColor={palette.border}
-          color={palette.text}
-          placeholderTextColor={palette.textMuted}
-          borderRadius={14}
-          height={52}
-        />
+        
+        <XStack gap={12}>
+          <YStack flex={1} gap={4}>
+            <Text color={palette.textMuted} fontSize={12} style={{ ...fonts.medium, paddingLeft: 4 }}>Date de début</Text>
+            <TouchableOpacity onPress={() => setShowStartPicker(true)}>
+              <YStack
+                height={52}
+                backgroundColor={palette.card}
+                borderColor={palette.border}
+                borderWidth={1}
+                borderRadius={14}
+                justifyContent="center"
+                paddingHorizontal={16}
+              >
+                <Text color={palette.text}>{formatDateStr(startDate)}</Text>
+              </YStack>
+            </TouchableOpacity>
+          </YStack>
+          
+          <YStack flex={1} gap={4}>
+            <Text color={palette.textMuted} fontSize={12} style={{ ...fonts.medium, paddingLeft: 4 }}>Date de fin</Text>
+            <TouchableOpacity onPress={() => setShowEndPicker(true)}>
+              <YStack
+                height={52}
+                backgroundColor={palette.card}
+                borderColor={palette.border}
+                borderWidth={1}
+                borderRadius={14}
+                justifyContent="center"
+                paddingHorizontal={16}
+              >
+                <Text color={palette.text}>{formatDateStr(endDate)}</Text>
+              </YStack>
+            </TouchableOpacity>
+          </YStack>
+        </XStack>
+
+        {showStartPicker && (
+          <DateTimePicker
+            value={startDate}
+            mode="date"
+            display="default"
+            onChange={(event, date) => {
+              setShowStartPicker(Platform.OS === 'ios')
+              if (date) setStartDate(date)
+            }}
+          />
+        )}
+        
+        {showEndPicker && (
+          <DateTimePicker
+            value={endDate}
+            mode="date"
+            display="default"
+            onChange={(event, date) => {
+              setShowEndPicker(Platform.OS === 'ios')
+              if (date) setEndDate(date)
+            }}
+          />
+        )}
+
         <Input
           value={location}
           onChangeText={setLocation}

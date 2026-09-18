@@ -136,7 +136,6 @@ function RootNav() {
         <AppDialogProvider>
           <StatusBar style={mode === 'dark' ? 'light' : 'dark'} />
           <Stack
-            initialRouteName="splash"
             screenOptions={{ headerShown: false, contentStyle: { backgroundColor: palette.bg } }}
           >
             <Stack.Screen name="splash" options={{ headerShown: false, animation: 'none' }} />

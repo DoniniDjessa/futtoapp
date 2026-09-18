@@ -311,30 +311,38 @@ export function useNotifications() {
     void refresh()
 
     if (!supabase) return
-    let channel: any = null
 
-    void supabase.auth.getUser().then(({ data: { user } }) => {
-      if (!user || !supabase) return
+    // Use getSession (sync-compatible) to avoid building .on() after .subscribe() is called
+    let channel: ReturnType<typeof supabase.channel> | null = null
+    let cancelled = false
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (cancelled || !session?.user || !supabase) return
+      const userId = session.user.id
+
+      // Build the full chain before calling subscribe()
       channel = supabase
-        .channel(`user-notifs-${user.id}`)
+        .channel(`user-notifs-${userId}`)
         .on(
           'postgres_changes',
           {
             event: '*',
             schema: 'public',
             table: 'futto_notifications',
-            filter: `profile_id=eq.${user.id}`,
+            filter: `profile_id=eq.${userId}`,
           },
           () => {
             void refresh()
           },
         )
         .subscribe()
-    })
+    }).catch(() => { /* ignore offline errors */ })
 
     return () => {
+      cancelled = true
       if (channel && supabase) {
-        void supabase.removeChannel(channel)
+        supabase.removeChannel(channel).catch(() => undefined)
+        channel = null
       }
     }
   }, [refresh])

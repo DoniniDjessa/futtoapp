@@ -7,7 +7,7 @@ import { useTerrains } from '@/lib/data'
 import { useThemeMode } from '@/lib/theme-mode'
 import { colors, lightColors } from '@/lib/theme'
 
-/** Carte plein écran (react-native-maps). */
+/** Carte plein écran (Leaflet / OpenStreetMap). */
 export default function MapFullscreenScreen() {
   const router = useRouter()
   const insets = useSafeAreaInsets()

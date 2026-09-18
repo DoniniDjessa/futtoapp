@@ -23,26 +23,26 @@ function loadEnvLocal() {
   return out
 }
 
+const DEFAULT_SUPABASE_URL = 'https://tfcnforazrpfnrwtlisc.supabase.co'
+const DEFAULT_SUPABASE_ANON_KEY =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRmY25mb3JhenJwZm5yd3RsaXNjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg0OTA3ODIsImV4cCI6MjEwNDA2Njc4Mn0.lXYnK0fkrKdnAN8Ugvf4pY9X5rUH0FDClehm33o8tHk'
+
 const file = loadEnvLocal()
 const supabaseUrl =
   process.env.EXPO_PUBLIC_SUPABASE_URL ||
   process.env.NEXT_PUBLIC_SUPABASE_URL ||
   file.EXPO_PUBLIC_SUPABASE_URL ||
-  file.NEXT_PUBLIC_SUPABASE_URL
+  file.NEXT_PUBLIC_SUPABASE_URL ||
+  DEFAULT_SUPABASE_URL
 const supabaseAnonKey =
   process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ||
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
   file.EXPO_PUBLIC_SUPABASE_ANON_KEY ||
-  file.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  file.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+  DEFAULT_SUPABASE_ANON_KEY
 
 if (supabaseUrl) process.env.EXPO_PUBLIC_SUPABASE_URL = supabaseUrl
 if (supabaseAnonKey) process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY = supabaseAnonKey
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn(
-    '[futto] Missing Supabase env. Set EXPO_PUBLIC_SUPABASE_URL and EXPO_PUBLIC_SUPABASE_ANON_KEY in .env.local'
-  )
-}
 
 module.exports = ({ config }) => ({
   ...config,
@@ -60,7 +60,7 @@ module.exports = ({ config }) => ({
   },
   extra: {
     ...config.extra,
-    supabaseUrl: supabaseUrl || undefined,
-    supabaseAnonKey: supabaseAnonKey || undefined,
+    supabaseUrl: supabaseUrl || config.extra?.supabaseUrl || DEFAULT_SUPABASE_URL,
+    supabaseAnonKey: supabaseAnonKey || config.extra?.supabaseAnonKey || DEFAULT_SUPABASE_ANON_KEY,
   },
 })

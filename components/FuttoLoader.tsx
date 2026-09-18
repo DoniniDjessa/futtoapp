@@ -98,13 +98,7 @@ export function FuttoLogoLoader({
 }
 
 export function FuttoBootScreen({ label = 'Chargement de FUTTO…' }: { label?: string }) {
-  let mode: 'dark' | 'light' = 'dark'
-  try {
-    const theme = useThemeMode()
-    if (theme?.mode) mode = theme.mode
-  } catch {
-    mode = 'dark'
-  }
+  const { mode } = useThemeMode()
   const palette = mode === 'dark' ? colors : lightColors
 
   return (

@@ -4,7 +4,7 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router/react-naviga
 import { Stack, useRouter, useSegments } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Text, View } from 'react-native'
 import { TamaguiProvider } from 'tamagui'
 import {
@@ -29,17 +29,16 @@ import { AuthProvider, useAuth } from '@/lib/auth'
 import { isPermissionsPending } from '@/lib/permission-flags'
 import { AppDrawer } from '@/components/AppDrawer'
 import { AppDialogProvider } from '@/components/AppDialog'
-import { FuttoBootScreen } from '@/components/FuttoLoader'
 
 export { ErrorBoundary } from 'expo-router'
 
 SplashScreen.preventAutoHideAsync().catch(() => undefined)
 
-function Boot() {
-  return <FuttoBootScreen />
-}
-
 function MissingConfig() {
+  useEffect(() => {
+    SplashScreen.hideAsync().catch(() => undefined)
+  }, [])
+
   return (
     <View
       style={{
@@ -265,7 +264,7 @@ function RootNav() {
 }
 
 export default function RootLayout() {
-  const [fontsLoaded] = useFonts({
+  const [fontsLoaded, fontError] = useFonts({
     Oswald_400Regular,
     Oswald_500Medium,
     Oswald_600SemiBold,
@@ -275,19 +274,14 @@ export default function RootLayout() {
     PlusJakartaSans_600SemiBold,
     PlusJakartaSans_700Bold,
   })
-  const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    if (fontsLoaded) setReady(true)
-    const timer = setTimeout(() => setReady(true), 4000)
-    return () => clearTimeout(timer)
-  }, [fontsLoaded])
+    if (fontsLoaded || fontError) {
+      SplashScreen.hideAsync().catch(() => undefined)
+    }
+  }, [fontsLoaded, fontError])
 
-  useEffect(() => {
-    if (ready) SplashScreen.hideAsync().catch(() => undefined)
-  }, [ready])
-
-  if (!ready) return <Boot />
+  if (!fontsLoaded && !fontError) return null
   if (!isSupabaseConfigured()) return <MissingConfig />
 
   return (

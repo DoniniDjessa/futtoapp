@@ -65,15 +65,6 @@ async function requestAudio(): Promise<boolean> {
     }
   }
 
-  const av = tryNative(() => require('expo-av') as typeof import('expo-av'))
-  if (av?.Audio?.requestPermissionsAsync) {
-    try {
-      const mic = await av.Audio.requestPermissionsAsync()
-      return mic.status === 'granted'
-    } catch {
-      return false
-    }
-  }
   return false
 }
 

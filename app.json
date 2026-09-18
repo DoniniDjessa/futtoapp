@@ -76,12 +76,6 @@
         }
       ],
       [
-        "expo-av",
-        {
-          "microphonePermission": "FUTTO utilise le micro pour messages vocaux et contenus."
-        }
-      ],
-      [
         "expo-image-picker",
         {
           "photosPermission": "FUTTO accède à tes photos pour avatars, terrains et affiches."

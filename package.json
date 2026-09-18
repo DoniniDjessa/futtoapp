@@ -25,7 +25,6 @@
     "@tamagui/config": "^2.7.7",
     "babel-preset-expo": "~57.0.0",
     "expo": "~57.0.24",
-    "expo-av": "^16.0.8",
     "expo-camera": "~57.0.5",
     "expo-constants": "~57.0.17",
     "expo-font": "~57.0.3",
@@ -61,14 +60,5 @@
     "@tamagui/metro-plugin": "^2.7.7",
     "@types/react": "~19.2.4",
     "typescript": "~6.0.3"
-  },
-  "expo": {
-    "doctor": {
-      "reactNativeDirectoryCheck": {
-        "exclude": [
-          "expo-av"
-        ]
-      }
-    }
   }
 }

@@ -163,14 +163,19 @@ create policy futto_match_players_select on public.futto_match_players for selec
 drop policy if exists futto_match_players_insert on public.futto_match_players;
 create policy futto_match_players_insert on public.futto_match_players for insert to authenticated
   with check (
-    profile_id = auth.uid()
-    or public.futto_is_match_host(match_id)
+    public.futto_is_match_host(match_id)
+    or public.current_role() = 'superAdmin'
   );
 
 drop policy if exists futto_match_players_update on public.futto_match_players;
 create policy futto_match_players_update on public.futto_match_players for update to authenticated
   using (
     profile_id = auth.uid()
+    or public.futto_is_match_host(match_id)
+    or public.current_role() = 'superAdmin'
+  )
+  with check (
+    status = 'left'
     or public.futto_is_match_host(match_id)
     or public.current_role() = 'superAdmin'
   );
@@ -333,11 +338,27 @@ declare
   bal int;
   mp public.futto_match_players;
   pname text;
+  is_open boolean;
+  is_host boolean;
+  is_invited boolean;
 begin
   if auth.uid() is null then raise exception 'Non authentifié'; end if;
+
   select * into m from public.futto_matches where id = p_match_id;
   if m is null then raise exception 'Match introuvable'; end if;
   if m.status in ('cancelled', 'played') then raise exception 'Match fermé'; end if;
+
+  select (m.visibility in ('public', 'both')) into is_open;
+  select (m.host_id = auth.uid()) into is_host;
+  select exists (
+    select 1 from public.futto_match_players
+    where match_id = p_match_id and profile_id = auth.uid() and status = 'invited'
+  ) into is_invited;
+
+  if not (is_open or is_host or is_invited) then
+    raise exception 'Ce match n''est pas ouvert aux joueurs FUTTO.';
+  end if;
+
   if m.spots_taken >= m.spots_total then raise exception 'Complet'; end if;
 
   if m.join_mode = 'adhesion' and coalesce(m.price_participation, 0) > 0 then

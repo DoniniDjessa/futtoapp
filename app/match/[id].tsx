@@ -227,6 +227,13 @@ export default function MatchDetailScreen() {
       Alert.alert('Dupliquer', error?.message ?? 'Erreur')
       return
     }
+    // L'hôte est automatiquement inscrit sur le nouveau match (spots_taken sera sync par trigger)
+    await supabase.from(T.matchPlayers).insert({
+      match_id: data.id,
+      profile_id: user.id,
+      display_name: profile?.pseudo || profile?.full_name || profile?.first_name || 'Hôte',
+      status: 'joined',
+    })
     router.replace(`/match/${data.id}`)
   }
 

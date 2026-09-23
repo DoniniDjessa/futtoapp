@@ -1,27 +1,30 @@
-# NEXT_TASK — P0.2 Séparer Demander terrain ≠ Créer match
+# NEXT_TASK — P0.3 Effectif match
 
-**Statut** : ✅ **RÉSOLU le 2026-09-23** — CTA fiche terrain séparés (booking ≠ match).
-Suite : P0.3 « Effectif match » (host auto-inscrit ; Rejoindre / Quitter ; sync `spots_taken`).
+**Statut** : ✅ **RÉSOLU le 2026-09-23** — join/leave durcis + host auto-inscrit partout.
+Suite : P0.4 « Inviter WhatsApp » (message prérempli : titre, lieu, heure, places, prix).
 
 ## ✅ Récap de la résolution
 
-**Audit** — `TerrainDetailSheet` (modal HomeMap, mode page) était déjà séparé :
-« Demander un créneau » → `/demander-creneau?terrainId=` ; « Créer un match sur ce terrain » → `/creer`.
-Le vrai problème était **`app/terrain/[id].tsx`** (fiche riche, pointée par tous les listings) :
-- formulaire inline trompeur : sélecteurs slot/durée, **date +1 jour fictive**, insert `requested` direct
-  avec badge « Réservé pour … » (anti-fake violation), sans passer par la demande propre.
+**Audit** — l'existant était solide :
+- SQL : contrainte unique `futto_match_players(match_id, profile_id)` (upsert OK), trigger
+  `futto_match_players_spots_aiud` (recalcul `spots_taken` après insert/update/delete),
+  trigger `futto_match_players_min_notify` (notif hôte quand min atteint), RLS select/insert/update/delete.
+- App : `creer.tsx` auto-inscrit l'hôte (`status='joined'`) après création ; `match/[id]` join/leave +
+  inviter équipe ; `matchs.tsx` toggle join.
 
-**Corrections :**
-1. `terrain/[id].tsx` : supprimé le formulaire inline fake (état `slot`/`duration`/`booked`, `handleBook`,
-   sélecteurs créneaux, prix total), remplacé par une **sticky bar** à 2 CTA :
-   - « Demander un créneau » → `/demander-creneau?terrainId=` (booking, états request flow P0.1)
-   - « Créer un match sur ce terrain » → `/creer` (match)
-   Galerie, contact gérant/tel/WhatsApp, description, équipements, horaires, avis réels conservés.
-2. `TerrainDetailSheet.tsx` : déjà aligné (aucun changement).
-3. `reserver.tsx` (P0.1) : déjà directory réel sans formulaire (aucun changement).
+**Faille anti-magouille corrigée** — `futto_join_match` (security definer) **ne vérifiait ni visibilité ni
+invitation** : n'importe quel user connecté pouvait rejoindre un match privé par id (ou lien). En plus, la
+RLS `insert`/`update` permettait l'auto-`joined` par upsert/update direct (contournant le RPC).
+- Migration `20260323_p03_join_match_hardening.sql` : requiert `public|both` **OU** `status='invited'`
+  **OU** hôte pour rejoindre ; RLS insert = seuls hôte/superAdmin créent des lignes, update joueur limité
+  à `status='left'` (retrait/décline), toute montée en `joined` passe par le RPC.
+- `match/[id].tsx` `duplicate()` : hôte désormais auto-inscrit (comme `creer`, spots_taken sync par trigger).
+- Parity RLS/`futto_join_match` dans `APPLY_P0_P2_FLOWS.sql`.
 
-## Definition of Done (P0.2 — atteint)
-- [x] Bouton « Demander » fiche terrain → booking terrain (≠ `/creer`)
-- [x] « Créer un match » reste `/creer` ; plus aucun formulaire de réservation fake inline
+## Definition of Done (P0.3 — atteint)
+- [x] Hôte auto-inscrit (création + duplication)
+- [x] Rejoindre / Quitter (RPC join → statut `joined`/`left`, déclin invitation)
+- [x] Sync `spots_taken` par trigger (aucun update manuel du compteur côté app)
+- [x] Anti-magouille : match privé = invité/hôte uniquement ; plus d'auto-`joined` hors RPC
 - [x] `npx tsc --noEmit` → **0 erreur** ; `npx expo export --platform android` → **bundle OK**
-- [x] Changelog PRODUCT_ROADMAP.md : ligne P0.2 ajoutée
+- [x] Changelog PRODUCT_ROADMAP.md : ligne P0.3 ajoutée |

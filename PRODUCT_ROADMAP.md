@@ -158,6 +158,7 @@ Implémente le flow complet (DB + app + BO si besoin). Pas de polish UI hors flo
 | 2026-09-04 | **Push** | `expo-image-picker` + `ADD_PUSH_NOTIFICATIONS.sql` + `lib/push.ts` |
 | 2026-09-23 | **P0.0** | Baseline TS verte : **1057 → 0** (`tsc --noEmit` OK + `expo export` Android OK). Cause Tamagui v5 (universal) → `defaultConfig` **v4** + `onlyAllowShorthands:false` ; palette `as const` ; helpers `toColor`/`withAlpha`/`toTokenColor` ; route `/connexion`→`/login` |
 | 2026-09-23 | **P0.1** | Réservation terrain de bout en bout : `demander-creneau` (demande `requested` ≠ confirmé), `mes-reservations` (états + payer après confirmation, CTA créer match), BO Réservations (confirmer/refuser/payé + notifs). RLS durci : le demandeur ne peut plus se passer `confirmed`/`paid` par update direct (migration `20260323_p01_booking_rls_hardening`). `reserver.tsx` réécrit en directory réel (fini le formulaire démo) |
+| 2026-09-23 | **P0.2** | Séparer « Demander un créneau » (`/demander-creneau`) ≠ « Créer un match » (`/creer`). `terrain/[id].tsx` : formulaire inline fake (slot/durée, date +1j fictive, badge « Réservé ! ») supprimé → sticky bar avec CTA Demander créneau + Créer match ; galerie/équipements/contact/horaires réels conservés. `TerrainDetailSheet` déjà séparé |
 
 ---
 

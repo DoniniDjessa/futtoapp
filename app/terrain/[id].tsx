@@ -16,7 +16,6 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
-  Clock,
   Coffee,
   MapPin,
   MessageCircle,
@@ -31,7 +30,6 @@ import {
 } from 'lucide-react-native'
 import { Button, Text, XStack, YStack } from 'tamagui'
 import { fonts } from '@/lib/fonts'
-import { useAuth } from '@/lib/auth'
 import { useTerrains } from '@/lib/data'
 import { openGoogleMapsNavigation } from '@/lib/maps-nav'
 import { supabase } from '@/lib/supabase'
@@ -53,21 +51,15 @@ const ALL_AMENITY_ICONS: Record<string, { icon: any; label: string }> = {
   tribunes: { icon: Users, label: 'Tribunes' },
 }
 
-const durations = ['1h', '1h30', '2h']
-
 export default function TerrainDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
   const router = useRouter()
-  const { user } = useAuth()
   const { mode } = useThemeMode()
   const palette = mode === 'dark' ? colors : lightColors
   const { coords } = useUserLocation()
   const { terrains: dbTerrains } = useTerrains()
 
   const [dbTerrainSingle, setDbTerrainSingle] = useState<Terrain | null>(null)
-  const [slot, setSlot] = useState('18:00')
-  const [duration, setDuration] = useState('1h')
-  const [booked, setBooked] = useState(false)
   const [activePhotoIdx, setActivePhotoIdx] = useState(0)
   const galleryRef = useRef<ScrollView>(null)
 
@@ -155,17 +147,6 @@ export default function TerrainDetailScreen() {
     return list
   }, [terrain.image_url, terrain.photos])
 
-  // Créneaux dynamiques selon les heures réelles du terrain
-  const slots = useMemo(() => {
-    const startH = parseInt(terrain.opening_time?.split(':')[0] || '8', 10)
-    const endH = parseInt(terrain.closing_time?.split(':')[0] || '23', 10)
-    const list: string[] = []
-    for (let h = Math.max(6, startH); h <= Math.min(23, endH); h++) {
-      list.push(`${h.toString().padStart(2, '0')}:00`)
-    }
-    return list.length > 0 ? list : ['16:00', '17:00', '18:00', '19:00', '20:00', '21:00']
-  }, [terrain.opening_time, terrain.closing_time])
-
   // Équipements réels
   const displayAmenities = useMemo(() => {
     if (!terrain.amenities || terrain.amenities.length === 0) return []
@@ -174,9 +155,6 @@ export default function TerrainDetailScreen() {
       return match || { icon: Check, label: key }
     })
   }, [terrain.amenities])
-
-  const durationMult = duration === '2h' ? 2 : duration === '1h30' ? 1.5 : 1
-  const total = Math.round(terrain.price * durationMult)
 
   function scrollToPhoto(idx: number) {
     if (photos.length === 0) return
@@ -190,35 +168,6 @@ export default function TerrainDetailScreen() {
     const idx = Math.round(x / SCREEN_W)
     if (idx !== activePhotoIdx) {
       setActivePhotoIdx(idx)
-    }
-  }
-
-  async function handleBook() {
-    setBooked(true)
-    if (supabase && user && terrain) {
-      try {
-        const [hour, minute] = slot.split(':')
-        const now = new Date()
-        const bookingDate = new Date(
-          now.getFullYear(),
-          now.getMonth(),
-          now.getDate() + 1,
-          Number(hour),
-          Number(minute),
-        )
-
-        await supabase.from(T.bookings).insert({
-          terrain_id: terrain.id,
-          requester_id: user.id,
-          starts_at: bookingDate.toISOString(),
-          duration_hours: durationMult,
-          amount_fcfa: total,
-          status: 'requested',
-          note: `Réservation à ${slot} (${duration})`,
-        })
-      } catch {
-        /* best-effort */
-      }
     }
   }
 
@@ -580,84 +529,14 @@ export default function TerrainDetailScreen() {
             </YStack>
           ) : null}
 
-          {/* Horaires et Sélection du créneau */}
-          <YStack gap={10}>
-            <XStack justifyContent="space-between" alignItems="center">
-              <Text fontFamily="$heading" fontSize={18} color={palette.text} style={{ ...fonts.bold }}>
-                Choisir un créneau
-              </Text>
-              <Text color={palette.textMuted} fontSize={12} style={{ ...fonts.regular }}>
-                {terrain.opening_time} — {terrain.closing_time}
-              </Text>
-            </XStack>
-            <XStack flexWrap="wrap" gap={8}>
-              {slots.map((s) => {
-                const active = s === slot
-                return (
-                  <Pressable
-                    key={s}
-                    onPress={() => setSlot(s)}
-                    style={{
-                      width: '31%',
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: 6,
-                      paddingVertical: 12,
-                      borderRadius: 14,
-                      backgroundColor: active ? palette.primary : palette.card,
-                      borderWidth: 1,
-                      borderColor: active ? palette.primary : palette.border,
-                    }}
-                  >
-                    <Clock size={14} color={active ? '#fff' : palette.textMuted} />
-                    <Text
-                      color={active ? '#fff' : palette.text}
-                      fontSize={13}
-                      style={{ ...(active ? fonts.bold : fonts.semibold) }}
-                    >
-                      {s}
-                    </Text>
-                  </Pressable>
-                )
-              })}
-            </XStack>
-          </YStack>
-
-          {/* Choix de la Durée */}
-          <YStack gap={10}>
+          {/* Horaires du terrain */}
+          <YStack gap={6}>
             <Text fontFamily="$heading" fontSize={18} color={palette.text} style={{ ...fonts.bold }}>
-              Durée
+              Horaires
             </Text>
-            <XStack gap={8}>
-              {durations.map((d) => {
-                const active = d === duration
-                return (
-                  <Pressable
-                    key={d}
-                    onPress={() => setDuration(d)}
-                    style={{
-                      flex: 1,
-                      paddingVertical: 12,
-                      borderRadius: 14,
-                      backgroundColor: active ? palette.primary : palette.card,
-                      borderWidth: 1,
-                      borderColor: active ? palette.primary : palette.border,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <Text
-                      color={active ? '#fff' : palette.text}
-                      fontSize={13}
-                      style={{ ...(active ? fonts.bold : fonts.semibold) }}
-                    >
-                      {d}
-                    </Text>
-                  </Pressable>
-                )
-              })}
-            </XStack>
+            <Text color={palette.textMuted} fontSize={13} style={{ ...fonts.regular }}>
+              {terrain.opening_time} — {terrain.closing_time}
+            </Text>
           </YStack>
 
           {/* Avis des joueurs (données réelles sans faux avis) */}
@@ -685,7 +564,7 @@ export default function TerrainDetailScreen() {
         </YStack>
       </ScrollView>
 
-      {/* Sticky Bottom Reservation Bar */}
+      {/* Sticky Bottom : Demander un créneau ≠ Créer un match */}
       <YStack
         position="absolute"
         bottom={0}
@@ -703,53 +582,28 @@ export default function TerrainDetailScreen() {
         shadowRadius={10}
         elevation={8}
       >
-        {booked ? (
-          <XStack
-            alignItems="center"
-            justifyContent="center"
-            gap={8}
-            backgroundColor={`${palette.primary}22`}
-            paddingVertical={14}
-            borderRadius={16}
-          >
-            <Check size={18} color={palette.primary} />
-            <Text color={palette.primary} fontSize={14} style={{ ...fonts.bold }}>
-              Réservé pour {slot} — {formatFCFA(total)}
-            </Text>
-          </XStack>
-        ) : (
-          <XStack alignItems="center" gap={14}>
-            <YStack minWidth={90}>
-              <Text color={palette.textMuted} fontSize={11} style={{ ...fonts.regular }}>
-                Total ({duration})
-              </Text>
-              <Text
-                fontFamily="$heading"
-                fontSize={20}
-                color={palette.primary}
-                style={{ ...fonts.bold }}
-              >
-                {formatFCFA(total)}
-              </Text>
-            </YStack>
-
-            <Pressable
-              onPress={() => void handleBook()}
-              style={{
-                flex: 1,
-                height: 50,
-                borderRadius: 16,
-                backgroundColor: palette.primary,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Text color="#fff" fontFamily="$heading" fontSize={15} style={{ ...fonts.bold }}>
-                Réserver à {slot}
-              </Text>
-            </Pressable>
-          </XStack>
-        )}
+        <Button
+          backgroundColor={palette.primary}
+          borderRadius={16}
+          height={50}
+          onPress={() => router.push(`/demander-creneau?terrainId=${id}`)}
+        >
+          <Text color="#fff" fontFamily="$heading" fontSize={15} style={{ ...fonts.bold }}>
+            Demander un créneau
+          </Text>
+        </Button>
+        <Button
+          height={46}
+          borderRadius={16}
+          backgroundColor={palette.cardElevated}
+          borderWidth={1}
+          borderColor={palette.border}
+          onPress={() => router.push('/creer')}
+        >
+          <Text color={palette.text} fontSize={13} style={{ ...fonts.semibold }}>
+            Créer un match sur ce terrain
+          </Text>
+        </Button>
 
         <Pressable onPress={() => router.push('/reserver')}>
           <Text

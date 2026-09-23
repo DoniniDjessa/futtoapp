@@ -32,6 +32,7 @@ import { useMatches, usePlayers, useTerrains, useTournaments } from '@/lib/data'
 import { useAuth } from '@/lib/auth'
 import { isOpenOnFutto } from '@/lib/match-visibility'
 import { useUserLocation, getTerrainDistanceKm, PROXIMITY_RADIUS_KM } from '@/lib/location'
+import { matchInviteMessage, openWhatsAppInvite } from '@/lib/share'
 
 const QUICK_GAP = 12
 const QUICK_PAD = 20
@@ -295,21 +296,46 @@ export default function AccueilScreen() {
             <Text color={palette.gold} fontFamily="$heading" fontSize={16} marginTop={6}>
               {countdown}
             </Text>
-            <XStack justifyContent="space-between" alignItems="center" marginTop={12}>
-              <Text color={palette.primary} fontSize={13} style={{ ...fonts.semibold }}>
-                {nextMatch.spots_taken}/{nextMatch.spots_total} joueurs
-              </Text>
-              <Button
-                size="$3"
-                backgroundColor={palette.primary}
-                color="#fff"
-                borderRadius={999}
-                paddingHorizontal={18}
-                onPress={() => router.push(`/match/${nextMatch.id}`)}
-              >
-                Voir
-              </Button>
-            </XStack>
+<XStack justifyContent="space-between" alignItems="center" marginTop={12}>
+                <Text color={palette.primary} fontSize={13} style={{ ...fonts.semibold }}>
+                  {nextMatch.spots_taken}/{nextMatch.spots_total} joueurs
+                </Text>
+                <XStack gap={8}>
+                  <Button
+                    size="$3"
+                    backgroundColor={`${palette.primary}26`}
+                    color={palette.primary}
+                    borderRadius={999}
+                    paddingHorizontal={14}
+                    onPress={() =>
+                      void openWhatsAppInvite(
+                        matchInviteMessage({
+                          title: nextMatch.title,
+                          terrain: nextMatch.terrain_label,
+                          kickoffAt: nextMatch.kickoff_at,
+                          spotsTaken: nextMatch.spots_taken,
+                          spotsTotal: nextMatch.spots_total,
+                          joinMode: nextMatch.join_mode === 'adhesion' ? 'adhesion' : 'free',
+                          price: nextMatch.price_participation,
+                          shareToken: nextMatch.share_token,
+                        }),
+                      )
+                    }
+                  >
+                    Inviter
+                  </Button>
+                  <Button
+                    size="$3"
+                    backgroundColor={palette.primary}
+                    color="#fff"
+                    borderRadius={999}
+                    paddingHorizontal={18}
+                    onPress={() => router.push(`/match/${nextMatch.id}`)}
+                  >
+                    Voir
+                  </Button>
+                </XStack>
+              </XStack>
           </YStack>
         ) : (
           <YStack

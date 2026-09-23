@@ -327,7 +327,43 @@ begin
 end;
 $$;
 
-create or replace function public.futto_join_match(p_match_id uuid)
+create or replace function public.futto_match_by_token(p_token text)
+returns table (
+  id uuid,
+  title text,
+  terrain_label text,
+  zone text,
+  kickoff_at timestamptz,
+  format text,
+  spots_total integer,
+  spots_taken integer,
+  spots_min integer,
+  join_mode text,
+  price_participation integer,
+  visibility text,
+  status text,
+  host_pseudo text,
+  host_full_name text
+)
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select
+    m.id, m.title, m.terrain_label, m.zone, m.kickoff_at, m.format,
+    m.spots_total, m.spots_taken, m.spots_min, m.join_mode, m.price_participation,
+    m.visibility, m.status,
+    p.pseudo as host_pseudo, p.full_name as host_full_name
+  from public.futto_matches m
+  left join public.futto_profiles p on p.id = m.host_id
+  where m.share_token = p_token
+    and m.status not in ('cancelled', 'played');
+$$;
+
+grant execute on function public.futto_match_by_token(text) to anon, authenticated;
+
+create or replace function public.futto_join_match(p_match_id uuid, p_token text default null)
 returns public.futto_match_players
 language plpgsql
 security definer
@@ -355,7 +391,8 @@ begin
     where match_id = p_match_id and profile_id = auth.uid() and status = 'invited'
   ) into is_invited;
 
-  if not (is_open or is_host or is_invited) then
+  if not (is_open or is_host or is_invited
+          or (p_token is not null and m.share_token = p_token)) then
     raise exception 'Ce match n''est pas ouvert aux joueurs FUTTO.';
   end if;
 

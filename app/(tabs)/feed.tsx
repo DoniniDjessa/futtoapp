@@ -85,7 +85,7 @@ export default function FeedTabScreen() {
   async function handleToggleFollow(targetId: string) {
     if (!supabase) return
     if (!user?.id) {
-      router.push('/connexion')
+      router.push('/login')
       return
     }
     const isFollowing = followingIds.has(targetId)

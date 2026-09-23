@@ -1,3 +1,16 @@
+import type { ColorTokens } from '@tamagui/web'
+import type { OpaqueColorValue } from 'react-native'
+
+/** Couleur hex dynamique (valide en runtime) vers les props couleur Tamagui (strictes en type). */
+export const toColor = (v: string): OpaqueColorValue => v as unknown as OpaqueColorValue
+
+/** Hex + suffixe alpha ex. '22' (~13 %) — props couleur Tamagui strictes en type. */
+export const withAlpha = (hex: string, alpha = '22'): OpaqueColorValue =>
+  `${hex}${alpha}` as unknown as OpaqueColorValue
+
+/** Valeur des props *Color des champs Tamagui (placeholder/selection → ColorTokens). */
+export const toTokenColor = (v: string): ColorTokens => v as unknown as ColorTokens
+
 export { fonts, bodyFontFamily } from '@/lib/fonts'
 
 /** FUTTO skin — from ../futto demo + FORMULATION.md */
@@ -16,7 +29,7 @@ export const colors = {
   gold: '#ffb800',
   danger: '#ef4444',
   success: '#00b14f',
-}
+} as const
 
 export const lightColors = {
   bg: '#f4f7f5',
@@ -32,7 +45,7 @@ export const lightColors = {
   gold: '#ffb800',
   danger: '#ef4444',
   success: '#00b14f',
-}
+} as const
 
 export type ThemeMode = 'dark' | 'light'
 

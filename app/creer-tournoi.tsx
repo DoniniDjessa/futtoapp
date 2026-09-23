@@ -11,7 +11,7 @@ import { supabase } from '@/lib/supabase'
 import { T } from '@/lib/tables'
 import { uploadCompressedImage } from '@/lib/storage'
 import { useThemeMode } from '@/lib/theme-mode'
-import { colors, lightColors } from '@/lib/theme'
+import { colors, lightColors, toTokenColor } from '@/lib/theme'
 import { fonts } from '@/lib/fonts'
 import { notifyUser } from '@/lib/push'
 
@@ -155,7 +155,7 @@ export default function CreerTournoiScreen() {
           backgroundColor={palette.card}
           borderColor={palette.border}
           color={palette.text}
-          placeholderTextColor={palette.textMuted}
+          placeholderTextColor={toTokenColor(palette.textMuted)}
           borderRadius={14}
           height={52}
         />
@@ -227,7 +227,7 @@ export default function CreerTournoiScreen() {
           backgroundColor={palette.card}
           borderColor={palette.border}
           color={palette.text}
-          placeholderTextColor={palette.textMuted}
+          placeholderTextColor={toTokenColor(palette.textMuted)}
           borderRadius={14}
           height={52}
         />
@@ -239,7 +239,7 @@ export default function CreerTournoiScreen() {
           backgroundColor={palette.card}
           borderColor={palette.border}
           color={palette.text}
-          placeholderTextColor={palette.textMuted}
+          placeholderTextColor={toTokenColor(palette.textMuted)}
           borderRadius={14}
           height={52}
         />
@@ -251,7 +251,7 @@ export default function CreerTournoiScreen() {
           backgroundColor={palette.card}
           borderColor={palette.border}
           color={palette.text}
-          placeholderTextColor={palette.textMuted}
+          placeholderTextColor={toTokenColor(palette.textMuted)}
           borderRadius={14}
           height={52}
         />
@@ -262,7 +262,7 @@ export default function CreerTournoiScreen() {
           backgroundColor={palette.card}
           borderColor={palette.border}
           color={palette.text}
-          placeholderTextColor={palette.textMuted}
+          placeholderTextColor={toTokenColor(palette.textMuted)}
           borderRadius={14}
           height={52}
         />

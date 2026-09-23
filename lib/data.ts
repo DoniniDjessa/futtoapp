@@ -14,6 +14,7 @@ export type TournamentRow = {
   prize: string | null
   status: string
   poster_url: string | null
+  organizer_id: string | null
 }
 
 export type NotificationRow = {

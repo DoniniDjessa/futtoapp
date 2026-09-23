@@ -15,6 +15,8 @@ FUTTO est le carnet de poche d'un footballeur amateur ivoirien pour **tenir un m
 
 Voisin maquette : **`../futto`** (Next.js, tout mock). On n'en prend que la **peau** (couleurs `#0d0d0d`/`#161616`/`#00b14f`/`#ff7a00`/`#ffb800`, Oswald+Inter, tab bar avec pastille « + », cartes, FCFA). Pas l'âme (feed/boutique/classement/tournoi en vitrine).
 
+**Backoffice** : **`../futtobackoffice`** (Next.js 16 + Supabase, Tailwind 4). Comptes/ROI/Résas/Terrains/Tournois/Équipes/Utilisateurs/Paramètres dans `src/app/**`, APIs Next dans `src/app/api/**` (auth, bootstrap, maps, users). Il a son propre `AGENTS.md` (ne pas le supprimer). **Tout flow P0 couvre aussi le BO** : l'écran Fenêtre v2 (passeurs), la validation/réservation, et la création terrain/tournoi consomme les mêmes tables Supabase que l'app — ne dériver le schéma que dans `supabase/` de futtoapp (pas de tables BO séparées). Pas de repo git encore ; `git init` + remote GitHub à décider.
+
 ## Ton rôle à chaque session
 
 Tu es le développeur qui VIT avec ce produit (le débogue à 23 h, le défend devant un utilisateur furieux). Pas un exécutant de flow. Avant de coder :
@@ -36,7 +38,7 @@ Tu es le développeur qui VIT avec ce produit (le débogue à 23 h, le défend d
 - **futto-owner** (superviseur OpenClaw) : regarde le roadmap, choisit la tâche, commande aux suivants. Output : `autonomy/NEXT_TASK.md`.
 - **futto-explorer** (OpenClaw/opencode) : analyse `../futto` (la peau à porter) et écrit un rapport dans `docs/ui-port.md` (quoi prendre bouton par bouton, quoi refuser).
 - **futto-reviewer** (OpenClaw) : relit les diffs contre FORUMATION I.15 + roadmap DoD. Output : `autonomy/REVIEW_<date>.md`.
-- **Codeur/éditeur** : opencode (ce CLI) ou Cline (IDE) dans VS Code/Antigravity. Applique, vérifie typecheck, commit à la fin de chaque flow (`git commit` message « P0.x: <flow> »).
+- **Codeur/éditeur** : opencode (ce CLI) ou Cline (IDE) dans VS Code/Antigravity. Applique, vérifie typecheck, commit à la fin de chaque flow (`git commit` message « P0.x: <flow> »). Le BO (`../futtobackoffice`) avance avec l'app, jamais seul.
 
 Commandes de continuation (au lieu de réécrire des prompts) :
 

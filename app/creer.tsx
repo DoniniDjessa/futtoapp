@@ -819,7 +819,7 @@ export default function CreerMatchScreen() {
               borderWidth={0}
               color={palette.text}
               fontSize={16}
-              style={{ ...fonts.semibold }}
+style={{ ...fonts.semibold } as any}
             />
             <Text color={palette.textMuted} fontSize={13} style={{ ...fonts.bold }}>
               FCFA

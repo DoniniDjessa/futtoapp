@@ -156,6 +156,7 @@ Implémente le flow complet (DB + app + BO si besoin). Pas de polish UI hors flo
 | 2026-09-04 | Socle | Auth, terrains, carte, localisations, match draft, BO… |
 | 2026-09-04 | **P0–P2** | Bookings, match join, wallet, teams, tournois… SQL `APPLY_P0_P2_FLOWS.sql` |
 | 2026-09-04 | **Push** | `expo-image-picker` + `ADD_PUSH_NOTIFICATIONS.sql` + `lib/push.ts` |
+| 2026-09-23 | **P0.0** | Baseline TS verte : **1057 → 0** (`tsc --noEmit` OK + `expo export` Android OK). Cause Tamagui v5 (universal) → `defaultConfig` **v4** + `onlyAllowShorthands:false` ; palette `as const` ; helpers `toColor`/`withAlpha`/`toTokenColor` ; route `/connexion`→`/login` |
 
 ---
 

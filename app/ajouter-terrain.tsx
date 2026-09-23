@@ -26,7 +26,7 @@ import { notifyUser } from '@/lib/push'
 import { SURFACE_OPTIONS, canAddTerrains } from '@/lib/types'
 import type { Localisation } from '@/lib/types'
 import { useThemeMode } from '@/lib/theme-mode'
-import { colors, lightColors } from '@/lib/theme'
+import { colors, lightColors, toTokenColor } from '@/lib/theme'
 import { fonts } from '@/lib/fonts'
 import { useFormScroll } from '@/lib/form-scroll'
 
@@ -215,7 +215,7 @@ export default function AjouterTerrainScreen() {
             backgroundColor={palette.card}
             borderColor={palette.border}
             color={palette.text}
-            placeholderTextColor={palette.textMuted}
+            placeholderTextColor={toTokenColor(palette.textMuted)}
             borderRadius={14}
             height={52}
           />

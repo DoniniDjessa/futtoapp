@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { Pressable, RefreshControl, ScrollView, View } from 'react-native'
 import { useRouter, Stack } from 'expo-router'
-import { UserCheck, MapPin } from 'lucide-react-native'
+import { UserCheck, MapPin, Zap } from 'lucide-react-native'
 import { Text, YStack, XStack, Button } from 'tamagui'
 import { Avatar } from '@/components/Avatar'
 import { ImageViewerModal } from '@/components/ImageViewerModal'

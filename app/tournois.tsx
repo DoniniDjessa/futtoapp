@@ -8,7 +8,7 @@ import { FuttoLogoLoader } from '@/components/FuttoLoader'
 import { fonts } from '@/lib/fonts'
 import { useTournaments, type TournamentRow } from '@/lib/data'
 import { useThemeMode } from '@/lib/theme-mode'
-import { colors, formatFCFA, lightColors } from '@/lib/theme'
+import { colors, formatFCFA, lightColors, toColor, withAlpha } from '@/lib/theme'
 
 export default function TournoisScreen() {
   const router = useRouter()
@@ -27,9 +27,9 @@ export default function TournoisScreen() {
   }
 
   function getStatusLabel(status: string) {
-    if (status === 'full') return { label: 'Complet', color: palette.textMuted, bg: `${palette.border}` }
-    if (status === 'running') return { label: 'En cours', color: palette.accent, bg: `${palette.accent}22` }
-    return { label: 'Inscriptions ouvertes', color: palette.primary, bg: `${palette.primary}22` }
+    if (status === 'full') return { label: 'Complet', color: palette.textMuted, bg: toColor(palette.border) }
+    if (status === 'running') return { label: 'En cours', color: palette.accent, bg: withAlpha(palette.accent) }
+    return { label: 'Inscriptions ouvertes', color: palette.primary, bg: withAlpha(palette.primary) }
   }
 
   return (

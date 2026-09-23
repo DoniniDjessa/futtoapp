@@ -11,7 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { ChevronLeft, Eye, EyeOff } from 'lucide-react-native'
 import { Text, YStack, XStack, Input } from 'tamagui'
 import { fonts } from '@/lib/fonts'
-import { colors } from '@/lib/theme'
+import { colors, toTokenColor } from '@/lib/theme'
 
 type Props = {
   title: string
@@ -114,12 +114,12 @@ export const authField = {
   backgroundColor: '#f0f2f1',
   borderColor: 'transparent',
   color: '#0d0d0d',
-  placeholderTextColor: '#9ca3af',
+  placeholderTextColor: toTokenColor('#9ca3af'),
   borderRadius: 18,
   height: 54,
   paddingHorizontal: 18,
   textAlign: 'left' as const,
-}
+} as const
 
 type PasswordProps = {
   value: string

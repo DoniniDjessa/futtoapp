@@ -10,7 +10,7 @@ import { useAuth } from '@/lib/auth'
 import { useMatches } from '@/lib/data'
 import { supabase } from '@/lib/supabase'
 import { T } from '@/lib/tables'
-import { colors, formatFCFA, lightColors } from '@/lib/theme'
+import { colors, formatFCFA, lightColors, toColor, withAlpha } from '@/lib/theme'
 import { useThemeMode } from '@/lib/theme-mode'
 import type { MatchRow } from '@/lib/types'
 
@@ -162,9 +162,10 @@ export default function MatchsScreen() {
 
   async function toggleJoin(m: DisplayMatch) {
     if (!supabase || !user) {
-      router.push('/connexion')
+      router.push('/login')
       return
     }
+    const sb = supabase
     const status = myMemberships[m.id]
     const isJoined = status === 'joined'
 
@@ -172,11 +173,11 @@ export default function MatchsScreen() {
       dialog.showDialog({
         title: 'Quitter ce match ?',
         message: `Souhaites-tu te retirer du match « ${m.title} » ? Ta place sera libérée pour d'autres joueurs.`,
-        confirmText: 'Quitter le match',
-        onConfirm: async () => {
-          setMyMemberships((prev) => ({ ...prev, [m.id]: 'left' }))
-          try {
-            await supabase
+confirmText: 'Quitter le match',
+          onConfirm: async () => {
+            setMyMemberships((prev) => ({ ...prev, [m.id]: 'left' }))
+            try {
+              await sb
               .from(T.matchPlayers)
               .update({ status: 'left' })
               .eq('match_id', m.id)
@@ -217,7 +218,7 @@ export default function MatchsScreen() {
 
   async function acceptInvite(m: DisplayMatch) {
     if (!supabase || !user) {
-      router.push('/connexion')
+      router.push('/login')
       return
     }
     try {
@@ -250,6 +251,7 @@ export default function MatchsScreen() {
 
   async function declineInvite(m: DisplayMatch) {
     if (!supabase || !user) return
+    const sb = supabase
     dialog.showDialog({
       title: 'Décliner l’invitation ?',
       message: `Es-tu sûr de vouloir refuser l’invitation pour « ${m.title} » ?`,
@@ -257,7 +259,7 @@ export default function MatchsScreen() {
       onConfirm: async () => {
         setMyMemberships((prev) => ({ ...prev, [m.id]: 'left' }))
         try {
-          await supabase
+          await sb
             .from(T.matchPlayers)
             .update({ status: 'left' })
             .eq('match_id', m.id)
@@ -273,17 +275,17 @@ export default function MatchsScreen() {
   }
 
   function getTypeBadge(type: DisplayMatch['type']) {
-    let bg = `${palette.primary}22`
-    let color = palette.primary
+    let bg = withAlpha(palette.primary)
+    let color = toColor(palette.primary)
     if (type === 'Public') {
-      bg = `${palette.accent}22`
-      color = palette.accent
+      bg = withAlpha(palette.accent)
+      color = toColor(palette.accent)
     } else if (type === 'Tournoi') {
-      bg = `${palette.gold}22`
-      color = palette.gold
+      bg = withAlpha(palette.gold)
+      color = toColor(palette.gold)
     } else if (type === 'Privé') {
-      bg = `${palette.primary}22`
-      color = palette.primary
+      bg = withAlpha(palette.primary)
+      color = toColor(palette.primary)
     }
     return (
       <YStack

@@ -4,7 +4,7 @@ import { Text, YStack, Input, XStack } from 'tamagui'
 import { fonts } from '@/lib/fonts'
 import { usePlayers, useTerrains } from '@/lib/data'
 import { useThemeMode } from '@/lib/theme-mode'
-import { colors, lightColors, formatFCFA } from '@/lib/theme'
+import { colors, lightColors, formatFCFA, toTokenColor } from '@/lib/theme'
 
 export default function RechercheScreen() {
   const router = useRouter()
@@ -52,7 +52,7 @@ export default function RechercheScreen() {
         backgroundColor={palette.card}
         borderColor={palette.border}
         color={palette.text}
-        placeholderTextColor={palette.textMuted}
+        placeholderTextColor={toTokenColor(palette.textMuted)}
         borderRadius={12}
       />
 

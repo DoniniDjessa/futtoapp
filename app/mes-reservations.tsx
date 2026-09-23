@@ -24,6 +24,12 @@ import { colors, lightColors, formatFCFA } from '@/lib/theme'
 import { fonts } from '@/lib/fonts'
 import type { TerrainBooking } from '@/lib/types'
 
+function initials(name?: string | null) {
+  if (!name) return '?'
+  const parts = name.trim().split(/\s+/)
+  return ((parts[0]?.[0] ?? '') + (parts[1]?.[0] ?? '')).toUpperCase() || '?'
+}
+
 const STATUS_LABEL: Record<TerrainBooking['status'], string> = {
   requested: 'Demandé',
   confirmed: 'Confirmé (à payer)',
@@ -576,7 +582,7 @@ export default function MesReservationsScreen() {
         >
           <Avatar
             uri={b.requester_avatar}
-            name={b.requester_name || 'Joueur'}
+            initials={initials(b.requester_name)}
             size={38}
           />
           <YStack flex={1} minWidth={0} gap={2}>

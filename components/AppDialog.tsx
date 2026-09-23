@@ -213,7 +213,7 @@ export function AppDialogProvider({ children }: { children: ReactNode }) {
                   const isPrimary = action.tone === 'primary'
 
                   let btnBg = mode === 'dark' ? 'rgba(255,255,255,0.08)' : '#F1F5F9'
-                  let btnColor = palette.text
+                  let btnColor: string = palette.text
                   let btnBorder = 'transparent'
 
                   if (isPrimary) {

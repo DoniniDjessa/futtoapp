@@ -1,4 +1,4 @@
-import { defaultConfig } from '@tamagui/config/v5'
+import { defaultConfig } from '@tamagui/config/v4'
 import { createFont, createTamagui } from 'tamagui'
 
 /**
@@ -109,6 +109,10 @@ const tamaguiConfig = createTamagui({
     ...defaultConfig.fonts,
     heading: oswald,
     body,
+  },
+  settings: {
+    ...defaultConfig.settings,
+    onlyAllowShorthands: false,
   },
 })
 

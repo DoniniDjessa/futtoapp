@@ -3,16 +3,10 @@ import { Pressable, ScrollView, View } from 'react-native'
 import { MapPin, Search, X } from 'lucide-react-native'
 import { Text, YStack, XStack, Input } from 'tamagui'
 import { fonts } from '@/lib/fonts'
+import { colors, lightColors, toTokenColor } from '@/lib/theme'
 import type { Localisation } from '@/lib/types'
 
-type Palette = {
-  bg: string
-  card: string
-  border: string
-  text: string
-  textMuted: string
-  primary: string
-}
+type Palette = typeof colors | typeof lightColors
 
 type Props = {
   items: Localisation[]
@@ -121,8 +115,8 @@ export function LocalisationSearchPicker({
             onFocus={() => setOpenState(true)}
             placeholder="Ex. Cocody, Angré…"
             color={palette.text}
-            placeholderTextColor={palette.textMuted}
-            style={{ ...fonts.regular, height: 48 }}
+            placeholderTextColor={toTokenColor(palette.textMuted)}
+            style={{ ...fonts.regular, height: 48 } as any}
           />
         </XStack>
 

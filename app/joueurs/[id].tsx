@@ -24,7 +24,7 @@ import { fonts } from '@/lib/fonts'
 import { useAuth } from '@/lib/auth'
 import { useMatches, usePlayers } from '@/lib/data'
 import { useThemeMode } from '@/lib/theme-mode'
-import { colors, lightColors } from '@/lib/theme'
+import { colors, lightColors, toColor, withAlpha } from '@/lib/theme'
 import { supabase } from '@/lib/supabase'
 import { T } from '@/lib/tables'
 import { computePlayerBadge } from '@/lib/player-badge'
@@ -88,6 +88,7 @@ export default function JoueurDetailScreen() {
   // Vérifier si l'utilisateur a déjà invité ce joueur à l'un de ses matchs actifs
   useEffect(() => {
     if (!user || !id || !supabase) return
+    const sb = supabase
     let active = true
     supabase
       .from(T.matches)
@@ -97,7 +98,7 @@ export default function JoueurDetailScreen() {
       .then(async ({ data: myMatches }) => {
         if (!active || !myMatches || myMatches.length === 0) return
         const matchIds = myMatches.map((m) => m.id)
-        const { data: mpData } = await supabase
+        const { data: mpData } = await sb
           .from(T.matchPlayers)
           .select('status')
           .in('match_id', matchIds)
@@ -162,12 +163,12 @@ export default function JoueurDetailScreen() {
     joueur?.full_name || joueur?.first_name || joueur?.pseudo || 'Joueur FUTTO'
 
   async function handleInvite() {
-    if (!user) {
+    if (!user || !supabase) {
       dialog.showDialog({
         title: 'Connexion requise',
         message: 'Connecte-toi pour inviter des joueurs à tes matchs.',
         confirmText: 'Se connecter',
-        onConfirm: () => router.push('/connexion'),
+        onConfirm: () => router.push('/login'),
         cancelText: 'Annuler',
       })
       return
@@ -287,7 +288,7 @@ export default function JoueurDetailScreen() {
         title: 'Connexion requise',
         message: 'Connecte-toi pour suivre ce joueur.',
         confirmText: 'Se connecter',
-        onConfirm: () => router.push('/connexion'),
+        onConfirm: () => router.push('/login'),
         cancelText: 'Annuler',
       })
       return
@@ -458,12 +459,12 @@ export default function JoueurDetailScreen() {
               ) : null}
 
               <YStack
-                backgroundColor={`${badge.color}22`}
+                backgroundColor={withAlpha(badge.color)}
                 paddingHorizontal={12}
                 paddingVertical={5}
                 borderRadius={999}
               >
-                <Text color={badge.color} fontSize={12} style={{ ...fonts.bold }}>
+                <Text color={toColor(badge.color)} fontSize={12} style={{ ...fonts.bold }}>
                   {badge.label}
                 </Text>
               </YStack>

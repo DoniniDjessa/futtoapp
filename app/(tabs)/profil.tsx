@@ -25,7 +25,7 @@ import { supabase } from '@/lib/supabase'
 import { T } from '@/lib/tables'
 import { uploadCompressedImage } from '@/lib/storage'
 import { useThemeMode } from '@/lib/theme-mode'
-import { colors, lightColors } from '@/lib/theme'
+import { colors, lightColors, toColor } from '@/lib/theme'
 import { computePlayerBadge } from '@/lib/player-badge'
 import { useMatches } from '@/lib/data'
 import { PlayerAvailabilityCard } from '@/components/PlayerAvailabilityCard'
@@ -92,7 +92,7 @@ export default function ProfilScreen() {
     if (!user) {
       Alert.alert('Connexion requise', 'Connecte-toi pour modifier ta photo de profil.', [
         { text: 'Annuler', style: 'cancel' },
-        { text: 'Se connecter', onPress: () => router.push('/connexion') },
+        { text: 'Se connecter', onPress: () => router.push('/login') },
       ])
       return
     }
@@ -159,7 +159,7 @@ export default function ProfilScreen() {
     if (!user) {
       Alert.alert('Connexion requise', 'Connecte-toi pour modifier ta photo de couverture.', [
         { text: 'Annuler', style: 'cancel' },
-        { text: 'Se connecter', onPress: () => router.push('/connexion') },
+        { text: 'Se connecter', onPress: () => router.push('/login') },
       ])
       return
     }
@@ -398,13 +398,13 @@ export default function ProfilScreen() {
               <XStack
                 alignItems="center"
                 gap={6}
-                backgroundColor={badge.bgColor}
+                backgroundColor={toColor(badge.bgColor)}
                 paddingHorizontal={12}
                 paddingVertical={5}
                 borderRadius={999}
               >
                 <Award size={13} color={badge.color} />
-                <Text color={badge.color} fontSize={12} style={{ ...fonts.bold }}>
+                <Text color={toColor(badge.color)} fontSize={12} style={{ ...fonts.bold }}>
                   {badge.label}
                 </Text>
               </XStack>

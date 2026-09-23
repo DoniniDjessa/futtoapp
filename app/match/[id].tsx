@@ -124,7 +124,7 @@ export default function MatchDetailScreen() {
   }
 
   async function join() {
-    if (!supabase || !id) return
+    if (!supabase || !id || !match) return
     setBusy(true)
     const { error } = await supabase.rpc('futto_join_match', { p_match_id: id })
     setBusy(false)

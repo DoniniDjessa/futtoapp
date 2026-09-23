@@ -9,7 +9,7 @@ import { useSessionProfile } from '@/lib/data'
 import { useAuth } from '@/lib/auth'
 import { fonts } from '@/lib/fonts'
 import { useThemeMode } from '@/lib/theme-mode'
-import { colors, lightColors } from '@/lib/theme'
+import { colors, lightColors, toColor, withAlpha } from '@/lib/theme'
 import { canAddTerrains } from '@/lib/types'
 import { computePlayerBadge } from '@/lib/player-badge'
 
@@ -30,7 +30,7 @@ function MenuRow({
   active?: boolean
   danger?: boolean
   onPress: () => void
-  palette: typeof colors
+  palette: typeof colors | typeof lightColors
 }) {
   const Icon = item.icon
   const tint = danger ? palette.danger : active ? palette.primary : palette.text
@@ -228,13 +228,13 @@ export function AppDrawer() {
                     paddingHorizontal={8}
                     paddingVertical={3}
                     borderRadius={999}
-                    backgroundColor={badge.bgColor}
+                    backgroundColor={toColor(badge.bgColor)}
                     borderWidth={1}
-                    borderColor={`${badge.color}33`}
+                    borderColor={withAlpha(badge.color, '33')}
                   >
-                    <Award size={12} color={badge.color} />
+                    <Award size={12} color={toColor(badge.color)} />
                     <Text
-                      color={badge.color}
+                      color={toColor(badge.color)}
                       fontSize={11}
                       style={{ ...fonts.bold }}
                     >

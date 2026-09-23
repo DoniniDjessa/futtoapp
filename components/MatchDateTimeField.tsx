@@ -6,15 +6,9 @@ import DateTimePicker, {
 import { CalendarDays, Clock } from 'lucide-react-native'
 import { Text, YStack, XStack } from 'tamagui'
 import { fonts } from '@/lib/fonts'
+import { colors, lightColors } from '@/lib/theme'
 
-type Palette = {
-  card: string
-  border: string
-  text: string
-  textMuted: string
-  primary: string
-  bg: string
-}
+type Palette = typeof colors | typeof lightColors
 
 type Props = {
   value: Date | null

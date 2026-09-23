@@ -210,7 +210,7 @@ export function HomeMap({
       source={{ html, baseUrl: 'https://unpkg.com/' }}
       style={
         fullscreen
-          ? StyleSheet.absoluteFillObject
+          ? { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 }
           : { width: '100%', height: mapHeight, backgroundColor: '#dfece3' }
       }
       scrollEnabled={false}
@@ -318,7 +318,7 @@ export function HomeMap({
         <View
           pointerEvents="none"
           style={[
-            StyleSheet.absoluteFillObject,
+            { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 },
             { alignItems: 'center', justifyContent: 'center', backgroundColor: '#dfece3' },
           ]}
         >

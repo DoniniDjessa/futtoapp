@@ -113,7 +113,7 @@ export async function notifyUser(params: {
   profileId: string
   title: string
   body: string
-  kind?: 'match' | 'invite' | 'reminder' | 'system' | 'booking' | 'wallet'
+  kind?: 'match' | 'invite' | 'reminder' | 'system' | 'booking' | 'wallet' | 'tournament'
   data?: Record<string, unknown>
 }) {
   if (!supabase) return

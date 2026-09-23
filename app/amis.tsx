@@ -22,7 +22,7 @@ import { supabase } from '@/lib/supabase'
 import { T } from '@/lib/tables'
 import { notifyUser } from '@/lib/push'
 import { useThemeMode } from '@/lib/theme-mode'
-import { colors, lightColors } from '@/lib/theme'
+import { colors, lightColors, toTokenColor } from '@/lib/theme'
 import type { Profile } from '@/lib/types'
 
 function initials(name?: string | null) {
@@ -78,7 +78,7 @@ export default function AmisScreen() {
 
   async function toggleFollow(targetId: string) {
     if (!supabase || !user) {
-      router.push('/connexion')
+      router.push('/login')
       return
     }
 
@@ -180,7 +180,7 @@ export default function AmisScreen() {
             value={search}
             onChangeText={setSearch}
             placeholder="Rechercher par nom, pseudo, poste…"
-            placeholderTextColor={palette.textMuted}
+            placeholderTextColor={toTokenColor(palette.textMuted)}
             backgroundColor="transparent"
             borderWidth={0}
             color={palette.text}

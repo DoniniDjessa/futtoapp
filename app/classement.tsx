@@ -95,68 +95,74 @@ export default function ClassementScreen() {
           headerTintColor: palette.text,
         }}
       />
-      <Text color={palette.textMuted} fontSize={12} style={{ ...fonts.regular }}>
-        Classement par matchs honorés (joués), pas par date d’inscription.
-      </Text>
       {loading ? (
-        <Text color={palette.textMuted} style={{ ...fonts.medium }}>
-          Chargement…
-        </Text>
+        <YStack flex={1} justifyContent="center" alignItems="center">
+          <Text color={palette.textMuted} style={{ ...fonts.medium }}>
+            Chargement…
+          </Text>
+        </YStack>
       ) : rows.length === 0 ? (
-        <Text color={palette.textMuted} style={{ ...fonts.medium }}>
-          Pas encore de matchs joués à classer.
-        </Text>
+        <YStack flex={1} justifyContent="center" alignItems="center">
+          <Text color={palette.textMuted} fontSize={15} textAlign="center" style={{ ...fonts.medium }}>
+            Aucune donnée pour l'instant
+          </Text>
+        </YStack>
       ) : (
-        rows.map((j, i) => {
-          const isMe = j.id === user?.id
-          const displayName = j.full_name || j.first_name || 'Joueur'
-          return (
-            <XStack
-              key={j.id}
-              alignItems="center"
-              gap="$3"
-              paddingVertical="$2"
-              borderBottomWidth={1}
-              borderBottomColor={palette.border}
-            >
-              <Text color={palette.gold} fontFamily="$heading" width={28} fontSize={16}>
-                {i + 1}
-              </Text>
-              <Pressable
-                onPress={() => {
-                  if (j.avatar_url) {
-                    setViewerImage({ url: j.avatar_url, title: displayName })
-                  } else {
-                    router.push(isMe ? '/profil' : (`/joueurs/${j.id}` as any))
-                  }
-                }}
+        <>
+          <Text color={palette.textMuted} fontSize={12} style={{ ...fonts.regular }}>
+            Classement par matchs honorés (joués), pas par date d'inscription.
+          </Text>
+          {rows.map((j, i) => {
+            const isMe = j.id === user?.id
+            const displayName = j.full_name || j.first_name || 'Joueur'
+            return (
+              <XStack
+                key={j.id}
+                alignItems="center"
+                gap="$3"
+                paddingVertical="$2"
+                borderBottomWidth={1}
+                borderBottomColor={palette.border}
               >
-                <Avatar
-                  initials={initials(displayName)}
-                  color={palette.primary}
-                  size={38}
-                  uri={j.avatar_url}
-                />
-              </Pressable>
-              <Pressable
-                style={{ flex: 1 }}
-                onPress={() => router.push(isMe ? '/profil' : (`/joueurs/${j.id}` as any))}
-              >
-                <YStack flex={1}>
-                  <Text color={palette.text} style={{ ...fonts.semibold }}>
-                    {displayName} {isMe ? '(Vous)' : ''}
-                  </Text>
-                  <Text color={palette.textMuted} fontSize={12} style={{ ...fonts.medium }}>
-                    {j.city || 'Abidjan'}
-                  </Text>
-                </YStack>
-              </Pressable>
-              <Text color={palette.primary} style={{ ...fonts.bold }} fontSize={16}>
-                {j.played} m.
-              </Text>
-            </XStack>
-          )
-        })
+                <Text color={palette.gold} fontFamily="$heading" width={28} fontSize={16}>
+                  {i + 1}
+                </Text>
+                <Pressable
+                  onPress={() => {
+                    if (j.avatar_url) {
+                      setViewerImage({ url: j.avatar_url, title: displayName })
+                    } else {
+                      router.push(isMe ? '/profil' : (`/joueurs/${j.id}` as any))
+                    }
+                  }}
+                >
+                  <Avatar
+                    initials={initials(displayName)}
+                    color={palette.primary}
+                    size={38}
+                    uri={j.avatar_url}
+                  />
+                </Pressable>
+                <Pressable
+                  style={{ flex: 1 }}
+                  onPress={() => router.push(isMe ? '/profil' : (`/joueurs/${j.id}` as any))}
+                >
+                  <YStack flex={1}>
+                    <Text color={palette.text} style={{ ...fonts.semibold }}>
+                      {displayName} {isMe ? '(Vous)' : ''}
+                    </Text>
+                    <Text color={palette.textMuted} fontSize={12} style={{ ...fonts.medium }}>
+                      {j.city || 'Abidjan'}
+                    </Text>
+                  </YStack>
+                </Pressable>
+                <Text color={palette.primary} style={{ ...fonts.bold }} fontSize={16}>
+                  {j.played} m.
+                </Text>
+              </XStack>
+            )
+          })}
+        </>
       )}
 
       <ImageViewerModal

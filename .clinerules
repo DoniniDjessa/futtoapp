@@ -1,0 +1,11 @@
+# Cline — règles projet FUTTO
+
+Importe automatiquement le contrat produit complet pour que tu côdes sans reprompt.
+
+- Lis **AGENTS.md** (racine) : mission, workflow, orchestration.
+- Lis **FORMULATION.md** (le contrat — il gagne sur tout) et **PRODUCT_ROADMAP.md** (ordre P0, DoD, Changelog).
+- Règle d'or : **un flow P0 complet** par session, pas un micro-UI. Vérifie `npx tsc --noEmit` avant de dire « c'est bon ». Vérifie la copie honnête (jamais « réservé » si seulement « demandé »).
+- N'ouvre pas Feed/Boutique/Classement tant que P0 n'est pas vert.
+- Remplis le Changelog du roadmap à la fin de chaque flow.
+
+Modèles : Cline accepte tout provider (OpenRouter / Google Gemini / Anthropic). Reste cohérent avec le fournisseur choisi dans les settings de l'extension.

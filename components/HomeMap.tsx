@@ -58,7 +58,7 @@ export function HomeMap({
   const nearbyLabel = loading
     ? 'Localisation…'
     : nearbyTerrains.length === 0
-      ? 'Aucun terrain à proximité (< 2.5 km)'
+      ? 'Aucun terrain à proximité'
       : nearbyTerrains.length === 1
         ? '1 terrain à proximité'
         : `${nearbyTerrains.length} terrains à proximité`
@@ -130,10 +130,17 @@ export function HomeMap({
         doubleClickZoom:true,
         boxZoom:false
       }).setView([${coords.lat},${coords.lng}],${zoom});
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+            var tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
         maxZoom:19,
-        attribution:'© OpenStreetMap'
+        subdomains:['a','b','c'],
+        attribution:'&copy; OpenStreetMap'
       }).addTo(map);
+      tileLayer.on('tileerror', function(error, tile) {
+        if (!tile._hasFallback && error && error.coords) {
+          tile._hasFallback = true;
+          tile.tile.src = 'https://basemaps.cartocdn.com/rastertiles/voyager/' + error.coords.z + '/' + error.coords.x + '/' + error.coords.y + '.png';
+        }
+      });
       var terrainIcon = L.divIcon({
         className:'',
         html:'<div class="futto-pin"><div class="futto-pin-dot"></div></div>',
@@ -198,7 +205,7 @@ export function HomeMap({
 
   const webView = (
     <WebView
-      key={`${coords.lat.toFixed(4)}-${coords.lng.toFixed(4)}-${withCoords.length}-${fullscreen ? 'f' : 'c'}`}
+      key={fullscreen ? 'futto-map-fullscreen' : 'futto-map-inline'}
       originWhitelist={['*']}
       source={{ html, baseUrl: 'https://unpkg.com/' }}
       style={
@@ -213,7 +220,11 @@ export function HomeMap({
       allowsInlineMediaPlayback
       setSupportMultipleWindows={false}
       nestedScrollEnabled
-      androidLayerType={Platform.OS === 'android' ? 'hardware' : undefined}
+      androidLayerType={Platform.OS === 'android' ? 'software' : undefined}
+      androidHardwareAccelerationDisabled={false}
+      userAgent="Mozilla/5.0 (Linux; Android 10; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36 FuttoApp/1.0"
+      containerStyle={{ backgroundColor: '#dfece3' }}
+      cacheEnabled
       onTouchStart={() => onMapGesture?.(true)}
       onTouchEnd={() => onMapGesture?.(false)}
       onMessage={(e) => onWebMessage(e.nativeEvent.data)}

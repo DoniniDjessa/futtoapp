@@ -87,7 +87,11 @@ export function PinMapPicker({ lat, lng, onChange, height = 220, dark = true }: 
           domStorageEnabled
           mixedContentMode="always"
           setSupportMultipleWindows={false}
-          androidLayerType={Platform.OS === 'android' ? 'hardware' : undefined}
+          androidLayerType={Platform.OS === 'android' ? 'software' : undefined}
+          androidHardwareAccelerationDisabled={false}
+          userAgent="Mozilla/5.0 (Linux; Android 10; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36 FuttoApp/1.0"
+          containerStyle={{ backgroundColor: '#dfece3' }}
+          cacheEnabled
           onMessage={(e) => {
             try {
               const data = JSON.parse(e.nativeEvent.data) as { lat: number; lng: number }

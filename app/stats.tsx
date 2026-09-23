@@ -1,3 +1,4 @@
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useEffect, useMemo, useState } from 'react'
 import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { useRouter, Stack } from 'expo-router'
@@ -27,6 +28,7 @@ type MatchHistoryItem = {
 }
 
 export default function StatsScreen() {
+  const insets = useSafeAreaInsets()
   const router = useRouter()
   const { mode } = useThemeMode()
   const palette = mode === 'dark' ? colors : lightColors
@@ -114,7 +116,9 @@ export default function StatsScreen() {
     <View style={[styles.screen, { backgroundColor: palette.bg }]}>
       <Stack.Screen options={{ headerShown: false }} />
 
-      <BackHeader title="Mes statistiques" onBack={() => router.back()} />
+      <View style={{ paddingTop: Math.max(insets.top, 16), backgroundColor: palette.card }}>
+        <BackHeader title="Mes statistiques" onBack={() => router.back()} />
+      </View>
 
       <ScrollView
         contentContainerStyle={{ padding: 16, gap: 16, paddingBottom: 40 }}

@@ -1,0 +1,17 @@
+{
+  "auto-approve-all": {
+    "enabled": true,
+    "PreToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node hook-allow.js",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

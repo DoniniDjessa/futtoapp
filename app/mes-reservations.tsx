@@ -368,7 +368,7 @@ export default function MesReservationsScreen() {
           </Button>
         ) : null}
 
-        {b.status === 'confirmed' || b.status === 'requested' ? (
+        {b.status === 'confirmed' ? (
           <XStack gap={8} flexWrap="wrap" marginTop={2}>
             {(['cash', 'wave', 'orange', 'mtn'] as const).map((p) => (
               <Button

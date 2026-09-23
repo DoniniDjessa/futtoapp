@@ -92,7 +92,10 @@ create policy futto_bookings_insert on public.futto_terrain_bookings for insert 
 drop policy if exists futto_bookings_update_requester on public.futto_terrain_bookings;
 create policy futto_bookings_update_requester on public.futto_terrain_bookings for update to authenticated
   using (requester_id = auth.uid())
-  with check (requester_id = auth.uid());
+  with check (
+    requester_id = auth.uid()
+    and status = 'requested'
+  );
 
 drop policy if exists futto_bookings_update_manager on public.futto_terrain_bookings;
 create policy futto_bookings_update_manager on public.futto_terrain_bookings for update to authenticated
